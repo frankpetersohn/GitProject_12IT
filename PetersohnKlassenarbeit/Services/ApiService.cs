@@ -13,11 +13,6 @@ namespace PetersohnKlassenarbeit.Services
     internal class ApiService
     {
         public static string ApiUrl = "https://frankpetersohn.github.io/";
-        public enum ApiOptions
-        {
-            berufe,
-            lernfelder
-        };
 
         public static async Task<string> GetServerResponseAsJson(string url)
         {

@@ -11,22 +11,26 @@ namespace PetersohnKlassenarbeit.Services
 {
     internal class CsvService
     {
-        public static void CreateCsvFile(string json, string savePath)
+        public static async void CreateCsvFile(string json, string savePath)
         {
-            try
+            await Task.Run(() =>
             {
-                //var jsonObject = JsonConvert.DeserializeObject<string>(json);
-                using (var writer = new StreamWriter(savePath))
-                using (var csv = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
+                try
                 {
-                    csv.WriteRecords(json);
+                    //var jsonObject = JsonConvert.DeserializeObject<string>(json);
+                    using (var writer = new StreamWriter(savePath))
+                    using (var csv = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
+                    {
+                        csv.WriteRecords(json);
+                    }
+                    Console.WriteLine($"CSV-Datei erstellt: {savePath}");
                 }
-                Console.WriteLine($"CSV-Datei erstellt: {savePath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("CSV-Datei konnte nicht erstellt werden. Fehler:\n" + ex.Message);
+                }
+            });
+
 
         }
     }

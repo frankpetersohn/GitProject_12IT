@@ -31,7 +31,8 @@ internal class Program
         XmlService.CreateXmlFile(json, Utils.GetSavePath(savePath, "xml"));
 
 
-        Console.WriteLine("Konvertierung erfolgreich!\nDrücken Sie eine beliebige Taste um das Programm zu beenden...");
+
+        Console.WriteLine("Drücken Sie eine beliebige Taste um das Programm zu beenden...");
     }
 }
 

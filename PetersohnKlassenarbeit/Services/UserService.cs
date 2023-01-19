@@ -24,6 +24,7 @@ namespace PetersohnKlassenarbeit.Services
             {
                 url += "lernfelder.json";
             }
+
             return url;
         }
 
@@ -49,7 +50,7 @@ namespace PetersohnKlassenarbeit.Services
         {
             while (true)
             {
-                Console.WriteLine("Bitte geben Sie einen gültigen Ordner an, indem die CSV und XML gespeichert werden sollen:");
+                Console.WriteLine("Bitte geben Sie einen gültigen Ordner an, indem die CSV- und XML-Dateien gespeichert werden sollen:");
                 string path = Console.ReadLine();
                 if (Directory.Exists(path))
                 {
