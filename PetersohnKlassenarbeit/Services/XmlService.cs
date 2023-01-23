@@ -10,26 +10,21 @@ namespace PetersohnKlassenarbeit.Services
 {
     internal class XmlService
     {
-        public static async void CreateXmlFile(string json, string savePath)
+        public static void CreateXmlFile(string json, string savePath)
         {
-            await Task.Run(() =>
+            try
             {
-                try
+                using (FileStream stream = new(savePath, FileMode.Create))
                 {
-                    XmlSerializer serializer = new(json.GetType());
-                    using (FileStream stream = new(savePath, FileMode.Create))
-                    {
-                        serializer.Serialize(stream, json);
-                    }
-                    Console.WriteLine($"XML-Datei erstellt: {savePath}");                    
+                    // JSON als string übergeben und mit XMLserializer in .xml-Datei schreiben
+                    new XmlSerializer(json.GetType()).Serialize(stream, json);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("XML-Datei konnte nicht erstellt werden. Fehler:\n" + ex.Message);
-                }
-            });
-
-
+                Console.WriteLine($"\nXML-Datei erstellt: {savePath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
         }
 

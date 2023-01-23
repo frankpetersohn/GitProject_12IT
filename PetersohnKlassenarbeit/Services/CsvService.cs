@@ -1,37 +1,78 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace PetersohnKlassenarbeit.Services
 {
     internal class CsvService
     {
-        public static async void CreateCsvFile(string json, string savePath)
+        public CsvService(string json, string savePath)
         {
-            await Task.Run(() =>
+            JObject jObject = JObject.Parse(json);
+            JArray = jObject[jObject.First.Path.ToString()] as JArray;
+            SavePath = savePath;
+        }
+
+        public string SavePath { get; set; }
+
+        public JArray JArray { get; set; } = new();
+
+
+        public List<string> GetHeadersFromJson()
+        {
+            try
             {
-                try
+                List<string> headers = new();
+
+                
+                foreach (JObject obj in JArray.Children<JObject>())
                 {
-                    //var jsonObject = JsonConvert.DeserializeObject<string>(json);
-                    using (var writer = new StreamWriter(savePath))
-                    using (var csv = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
+                    //Einmaliger Durchlauf der Keys für die Spaltenbezeichnung
+                    foreach (var property in obj.Properties())
                     {
-                        csv.WriteRecords(json);
+                        headers.Add(property.Name);
                     }
-                    Console.WriteLine($"CSV-Datei erstellt: {savePath}");
+                    break;
                 }
-                catch (Exception ex)
+                return headers;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new List<string>();
+            }
+        }
+
+        public void CreateCsvFile()
+        {
+            try
+            {
+                using StreamWriter writer = new(SavePath);
+                var headers = this.GetHeadersFromJson();
+
+                //Spaltenüberschriften einfügen
+                writer.WriteLine(String.Join(",", headers));
+
+                //Zeilen einfügen
+                foreach (var entry in JArray)
                 {
-                    Console.WriteLine("CSV-Datei konnte nicht erstellt werden. Fehler:\n" + ex.Message);
+                    writer.WriteLine(String.Join(",", entry.Values()));
                 }
-            });
 
-
+                Console.WriteLine($"\nCSV-Datei erstellt: {SavePath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

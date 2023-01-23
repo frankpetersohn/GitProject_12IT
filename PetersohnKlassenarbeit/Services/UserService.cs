@@ -9,9 +9,9 @@ namespace PetersohnKlassenarbeit.Services
 {
     internal class UserService
     {
+        public static string WelcomeMessage = $"Mit dieser Anwendung können Sie die API '{ApiService.ApiUrl}' ansprechen.\nMöchten Sie sich die Berufe oder Lernfelder anzeigen lassen?";
 
-        public string WelcomeMessage = $"Mit dieser Anwendung können Sie die API '{ApiService.ApiUrl}' ansprechen.\nMöchten Sie sich die Berufe oder Lernfelder anzeigen lassen?";
-
+        public static string ExitMessage = "\nKonvertierung abgeschlossen!\nDrücken Sie eine beliebige Taste um das Programm zu beenden...";
         public static string GetApiOption(int option)
         {
 
@@ -24,7 +24,6 @@ namespace PetersohnKlassenarbeit.Services
             {
                 url += "lernfelder.json";
             }
-
             return url;
         }
 
@@ -32,16 +31,17 @@ namespace PetersohnKlassenarbeit.Services
         {
             while (true)
             {
-                Console.WriteLine("Wählen Sie eine Option und geben Sie die zugehörige Nummer an:");
                 Console.WriteLine("1. Berufe");
                 Console.WriteLine("2. Lernfelder");
+
+                //Falls der Nutzer etwas anderes als die erlaubten Optionen eingibt, wird eine erneute Eingabe gefordert
                 if (int.TryParse(Console.ReadLine(), out int option) && (option == 1 || option == 2))
                 {
                     return option;
                 }
                 else
                 {
-                    Console.WriteLine("Ungültige Eingabe.\nBitte wählen Sie entweder 1 oder 2.");
+                    Console.WriteLine("\nUngültige Eingabe.\nBitte wählen Sie entweder 1 oder 2.");
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace PetersohnKlassenarbeit.Services
         {
             while (true)
             {
-                Console.WriteLine("Bitte geben Sie einen gültigen Ordner an, indem die CSV- und XML-Dateien gespeichert werden sollen:");
+                Console.WriteLine("\nBitte geben Sie einen gültigen Ordner an, indem die CSV und XML gespeichert werden sollen:");
                 string path = Console.ReadLine();
                 if (Directory.Exists(path))
                 {
@@ -58,7 +58,7 @@ namespace PetersohnKlassenarbeit.Services
                 }
                 else
                 {
-                    Console.WriteLine("Ungültiger Pfad. Bitte versuchen Sie es erneut.");
+                    Console.WriteLine("Ungültiger Pfad. Bitte versuchen Sie es erneut:\n");
                 }
             }
         }

@@ -3,16 +3,14 @@ using System.Net;
 
 internal class Program
 {
-    private static async Task Main(string[] args)
+    private static void Main(string[] args)
     {
-        var consoleService = new UserService();
-
         // Willkommensnachricht anzeigen
-        Console.WriteLine(consoleService.WelcomeMessage);
-        
+        Console.WriteLine(UserService.WelcomeMessage);
+
 #if DEBUG
         int option = 2;
-        string savePath = @"C:\Users\CAMAJUDE\Downloads";
+        string savePath = @"C:\Users\CAMAJUDE\OneDrive - B. Braun\Dokumente\Berufsschule\PETERSOHN\JsonKonverter\Data";
 #else
         // Nutzer nach Option fragen
         int option = UserService.GetOption();
@@ -21,18 +19,22 @@ internal class Program
         string savePath = UserService.GetSavePath();       
 
 #endif
-
+        //URL nach Nutzereingabe erzeugen
         string url = UserService.GetApiOption(option);
 
         //Anfrage an API senden
-        var json = await ApiService.GetServerResponseAsJson(url);
+        string json = ApiService.GetApiResponse(url);
 
-        CsvService.CreateCsvFile(json, Utils.GetSavePath(savePath, "csv"));
+        //CSV erzeugen
+        CsvService csvService = new(json, Utils.GetSavePath(savePath, "csv"));
+        csvService.CreateCsvFile();
+
+        //XML erzeugen
         XmlService.CreateXmlFile(json, Utils.GetSavePath(savePath, "xml"));
 
-
-
-        Console.WriteLine("Drücken Sie eine beliebige Taste um das Programm zu beenden...");
+        //Endscreen
+        Console.WriteLine(UserService.ExitMessage);
+        Console.ReadKey();
     }
 }
 

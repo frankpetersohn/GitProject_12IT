@@ -14,31 +14,17 @@ namespace PetersohnKlassenarbeit.Services
     {
         public static string ApiUrl = "https://frankpetersohn.github.io/";
 
-        public static async Task<string> GetServerResponseAsJson(string url)
+        public static string GetApiResponse(string url)
         {
-            string result = string.Empty;
-            await Task.Run(() =>
+            using var client = new HttpClient();
+            var request = new HttpRequestMessage
             {
-                try
-                {                
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                    request.Method = "GET";
+                RequestUri = new Uri(url),
+                Method = HttpMethod.Get,
+            };
+            var response = client.SendAsync(request).Result;
 
-                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                    StreamReader reader = new(response.GetResponseStream());
-                    result = reader.ReadToEnd();
-                    //string json = reader.ReadToEnd();
-                    //var result = JsonConvert.DeserializeObject(json).ToString();
-                    //return (string)result;});
-                }
-                catch
-                {
-                    Console.WriteLine($"Antwort von '{url}' ungültig");
-                    
-                }
-            });
-            return result;
-
+            return response.Content.ReadAsStringAsync().Result;
         }
     }
 }
